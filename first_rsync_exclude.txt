@@ -1,0 +1,14 @@
+#コピーを除外するファイル
+
+#GIT
+.gitignore
+.gitattributes
+
+#SVN
+.svn
+
+#ENV
+.env.testing
+
+#bootstrap
+bootstrap/cache/config.php

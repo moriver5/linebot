@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="./js/jquery.qrcode.min.js"></script>
+<meta name="viewport" content="width=device-width">
+</head>
+<body>
+<div id="qrcode"></div>
+<div id="text1"></div>
+<script type="text/javascript">
+  const getParams = () => {
+    let href = window.location.href.split('?')[1];
+    let arg = new Object;
+    if (href !== undefined) {
+      let pair = href.split('&');
+      for(let i=0; pair[i]; i++) {
+        let kv = pair[i].split('=');
+        arg[kv[0]] = kv[1];
+      }
+    }
+    let referrer = document.referrer;
+    if (referrer !== undefined) {
+     arg['referrer'] = decodeURIComponent(referrer);
+    }else{
+     arg['referrer'] = 'none';
+    }
+    return arg;
+  };
+  function getUserType() {
+  	var ua = [
+      "iPod",
+      "iPad",
+      "iPhone",
+      "Android"
+    ]
+    for (var i = 0; i < ua.length; i++) {
+      if (navigator.userAgent.indexOf(ua[i]) > 0) {
+        return "Phone";
+      }
+    }
+    return "Other";
+  }
+  var _paq = window._paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://ad-link.site/matomo/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '5']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+  let UaType = getUserType();
+  let arg = getParams();
+  let pk_campaign = arg.pk_campaign;
+  let ad_cd = arg.ad_cd;
+  let xuid = arg._xuid;
+  let asp = arg.asp;
+  let referrer = encodeURIComponent(arg.referrer);
+
+  if(UaType == "Other" ){
+    let originUrl = location.href;
+    if (originUrl.indexOf('?') > 0) {
+      originUrl = originUrl +"&qr=1&referrer=" + referrer;
+    }else{
+      originUrl = originUrl +"?qr=1&referrer=" + referrer;
+    }
+    $('#qrcode').qrcode({
+        text: originUrl,
+        width: 300,
+        height: 300,
+        background : "#fff",
+        foreground : "#000"
+    });
+    document.getElementById("text1").innerHTML = "<b>QRコードを読み込んでアクセス！</b>";
+    window.onload = function(){
+//        let arg = getParams();
+//        let pk_campaign = arg.pk_campaign;
+//        let ad_cd = arg.ad_cd;
+//        let json_data = JSON.stringify(arg);
+
+        $.ajax({
+         type: 'POST',
+         url: 'https://line.ad-scope.net/php/line/track/adcode/pv',
+         cache: false,
+         data: {'pk_campaign':arg.pk_campaign,'ad_cd':arg.ad_cd},
+         dataType: 'json',
+         crossDomain:true,
+         xhrFields: {
+            withCredentials: true
+         },
+         scriptCharset: 'utf-8',
+         timespan:1000,
+         success: function() {
+         },
+         error: function() {
+         },
+         complete: function() {
+         }
+        });
+    }
+  }else{
+//    let arg = getParams();
+//    let pk_campaign = arg.pk_campaign;
+//    let ad_cd = arg.ad_cd;
+//    let xuid = arg._xuid;
+    let json_data = JSON.stringify(arg);
+    let url = 'https://line.ad-scope.net/php/line/track/' + pk_campaign + '/' + ad_cd + '?asp=' + asp + '&xuid=' + xuid + '&referrer=' + referrer;
+
+    $.ajax({
+       type: 'POST',
+       url: url,
+       cache: false,
+       data: json_data,
+       dataType: 'json',
+       scriptCharset: 'utf-8',
+       timespan:1000,
+       success: function() {
+       },
+       error: function() {
+       },
+       complete: function() {
+        if (pk_campaign !== undefined) {
+            $.ajax({
+                type: 'POST',
+                url: 'https://line.ad-scope.net/php/line/track/adcode/pv',
+                cache: false,
+                data: {'pk_campaign':pk_campaign,'ad_cd':ad_cd},
+                dataType: 'json',
+                crossDomain:true,
+                xhrFields: {
+                   withCredentials: true
+                },
+                scriptCharset: 'utf-8',
+                timespan:1000,
+                success: function() {
+                },
+                error: function() {
+                },
+                complete: function() {
+                }
+            });
+            let linkUrl = 'https://line.me/R/ti/p/%40' + pk_campaign;
+            setTimeout(() => {
+              window.location.href = linkUrl;
+            }, 100);
+        }
+       }
+    });
+  }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+
+input[type=file] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.admin_default{
+    color:black !important;
+    font:normal 12px/120% 'メイリオ',sans-serif;
+}
+
+.admin_table{
+    font:normal 12px/120% 'メイリオ',sans-serif;
+    padding:2px;
+    text-align:center;
+    background:wheat;
+    font-weight:bold;
+}
+
+.admin_td{
+    padding:2px;
+    text-align:center;
+    font-weight:normal;
+}
+
+.admin_search{
+    text-align:center;
+    background:wheat;
+    font-weight:bold;
+}
+
+
+
+

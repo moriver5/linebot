@@ -1,0 +1,21 @@
+
+.arrow{
+  width: 200px;
+}
+.arrow::before{
+  content: "";
+  display: block;
+  margin: 0 auto;
+  width: 120px;
+  height: 50px;
+  background: deepskyblue;
+}
+.arrow::after{
+  content: "";
+  display:block;
+  border-top: 100px solid deepskyblue;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  transform-origin: left top;
+  transform: scaleY(.5);
+}

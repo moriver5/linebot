@@ -1,0 +1,47 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+
+    # Redirect Trailing Slashes If Not A Folder...
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+#<IfModule mod_expires.c>
+    #キャッシュの有効期限を設定
+#    ExpiresActive On
+#    ExpiresByType text/html "access plus 1 weeks"
+#    ExpiresByType text/css "access plus 1 weeks"
+#    ExpiresByType image/gif "access plus 1 weeks"
+#    ExpiresByType image/jpeg "access plus 1 weeks"
+#    ExpiresByType image/png "access plus 1 weeks"
+#    ExpiresByType text/javascript "access plus 4 weeks"
+#    ExpiresByType application/x-javascript "access plus 4 weeks"
+#</IfModule>
+
+#キャッシュするためのマニフェストファイル
+#効いてなかったのでコメントアウト
+#AddType text/cache-manifest .appcache
+
+#表示高速化
+#モジュールのインストールが必要
+#https://www.modpagespeed.com/doc/download
+ModPagespeed On
+ModPagespeedEnableFilters prioritize_critical_css
+ModPagespeedEnableFilters rewrite_css
+ModPagespeedEnableFilters rewrite_javascript
+#ModPagespeedEnableFilters rewrite_images
+ModPagespeedDisableFilters recompress_images
+ModPagespeedCriticalImagesBeaconEnabled false
